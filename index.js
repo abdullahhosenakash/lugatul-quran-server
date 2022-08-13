@@ -18,9 +18,10 @@ async function run() {
         const wordCollection = client.db("lugatulQuran").collection("arabicDictionary");
         const adminCollection = client.db("lugatulQuran").collection("admin");
 
-        app.post('/postWord/:text', async (req, res) => {
-            const text = req.params.text;
-
+        app.post('/postWord', async (req, res) => {
+            const newWord = req.body;
+            const result = await wordCollection.insertOne(newWord);
+            res.send(result);
         })
 
         app.get('/getWord/:searchedText', async (req, res) => {
@@ -28,7 +29,6 @@ async function run() {
             const cursor = wordCollection.find({});
             const wordList = await cursor.toArray();
             const result = wordList.filter(word => word.arabicWord.startsWith(searchedText));
-            console.log(result);
             if (result) {
                 res.send({ result });
             }
