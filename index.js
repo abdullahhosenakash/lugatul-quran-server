@@ -16,8 +16,12 @@ async function run() {
     try {
 
         const wordCollection = client.db("lugatulQuran").collection("arabicDictionary");
+        const adminCollection = client.db("lugatulQuran").collection("admin");
 
+        app.post('/postWord/:text', async (req, res) => {
+            const text = req.params.text;
 
+        })
 
         app.get('/getWord/:searchedText', async (req, res) => {
             const searchedText = req.params.searchedText;
@@ -31,6 +35,17 @@ async function run() {
             else {
                 res.send('0');
             }
+        });
+
+        app.post('/isAdmin', async (req, res) => {
+            const secretKey = req.body.secret;
+            const result = await adminCollection.findOne({ adminSecret: secretKey });
+            if (result) {
+                res.send('1');
+            }
+            else {
+                res.send('0');
+            }
         })
     }
     finally {
@@ -38,17 +53,6 @@ async function run() {
     }
 }
 run().catch(console.dir);
-
-app.get('/postWord/:text', async (req, res) => {
-    const text = req.params.text;
-    const updatedJSON = {
-        "arabicWord": `${text}`,
-        "banglaMeaning": "shariati updated"
-    }
-    // fs.writeFile('./arabicDictionary.json', JSON.stringify(updatedJSON), (err) => {
-    //     if (err) console.log('Error writing file:', err);
-    // })
-})
 
 app.get('/', async (req, res) => {
     res.send('Lugatul Quran Running');
