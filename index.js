@@ -22,7 +22,7 @@ async function run() {
             const newWord = req.body;
             const result = await wordCollection.insertOne(newWord);
             res.send(result);
-        })
+        });
 
         app.get('/getWord/:searchedText', async (req, res) => {
             const searchedText = req.params.searchedText;
